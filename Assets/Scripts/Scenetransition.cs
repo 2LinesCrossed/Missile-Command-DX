@@ -11,7 +11,7 @@ public class Scenetransition : MonoBehaviour
 {
     public Animator sceneSition;
     public string sceneName;
-    
+    //dummy comment
     // Start is called before the first frame update
     void Start()
     {
