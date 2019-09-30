@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class CursorMover : MonoBehaviour
 {
-    [SerializeField] private Texture2D cursorTexture;
+    [SerializeField] private Texture2D cursorTexture = null;
     
-    [SerializeField] GameObject missilePrefab;
-    [SerializeField] GameObject[] missileLauncherPrefabs;
+    [SerializeField] GameObject missilePrefab = null;
+    [SerializeField] GameObject[] missileLauncherPrefabs = null;
     private Vector2 cursorHotspot;
     // Start is called before the first frame update
     void Start()
