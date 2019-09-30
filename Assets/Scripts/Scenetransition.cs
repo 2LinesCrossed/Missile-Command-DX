@@ -11,22 +11,23 @@ public class Scenetransition : MonoBehaviour
 {
     public Animator sceneSition;
     public string sceneName;
+    private int sceneIndex;
     //dummy comment
     // Start is called before the first frame update
     void Start()
     {
-        
+        sceneIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S) && sceneIndex != 1 )
         {
             sceneName = "MainGame";
             StartCoroutine(LoadScene());
         }
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) && sceneIndex != 0)
         {
             sceneName = "Title Screen";
             StartCoroutine(LoadScene());
@@ -44,7 +45,8 @@ public class Scenetransition : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         SceneManager.LoadScene(sceneName);
         sceneSition.ResetTrigger("end");
-
+        
+        
     }
     
 }

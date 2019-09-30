@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/CoopScene.unity
-    guid: 5f9a37f9f6fa8714896ea42aeb4e8657
+    path: Assets/Scenes/Title Screen.unity
+    guid: f8dd2e026864a5c4396e27e735b4b731
   - enabled: 1
     path: Assets/Scenes/MainGame.unity
     guid: bd5e8f4c34da3a34daf0bb390c584202
   - enabled: 1
-    path: Assets/Scenes/Title Screen.unity
-    guid: f8dd2e026864a5c4396e27e735b4b731
+    path: Assets/Scenes/CoopScene.unity
+    guid: 5f9a37f9f6fa8714896ea42aeb4e8657
   m_configObjects: {}
