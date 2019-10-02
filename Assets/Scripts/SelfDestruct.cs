@@ -9,6 +9,7 @@ public class SelfDestruct : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Destroys object after a second.
         Destroy(gameObject, destroyTime);
     }
 
