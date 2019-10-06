@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Defenders
+  - CityKiller
+  - Explosions
   layers:
   - Default
   - TransparentFX

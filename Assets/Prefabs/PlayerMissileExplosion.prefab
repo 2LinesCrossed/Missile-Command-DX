@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 7709510886202078104}
   - component: {fileID: 7709510886202078106}
   - component: {fileID: 4173125059516006965}
+  - component: {fileID: 4566674846076793012}
   m_Layer: 0
   m_Name: PlayerMissileExplosion
-  m_TagString: Untagged
+  m_TagString: Explosions
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -113,3 +114,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyTime: 1
+--- !u!114 &4566674846076793012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7709510886202077799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06ef409aff19fb5409e4bd9f07e8361b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 2
+  explosionPrefab: {fileID: 7709510886202077799}

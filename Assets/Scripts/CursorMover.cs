@@ -24,7 +24,7 @@ public class CursorMover : MonoBehaviour
             GameObject bestTarget = GetClosestSilo(missileLauncherPrefabs);
             //The missile spawning code. Change this later to rotate the missile properly and for it to only spawn missiles from the closest silo.
 
-            //Object.Instantiate(missilePrefab, missileLauncherPrefab.transform.position,Quaternion.identity); 
+            
             Object.Instantiate(missilePrefab, bestTarget.transform.position,Quaternion.identity); 
         }
     }
