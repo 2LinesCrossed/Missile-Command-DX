@@ -46,13 +46,17 @@ public class EnemyMissile : MonoBehaviour
             Destroy(gameObject);
             if ((target.name == "MidSilo" || target.name == "LeftSilo" || target.name == "RightSilo") && death.GetCurrentAnimatorStateInfo(0).IsName("siloalive") )
             {
-                controller.missileDestroyedSilo();
+                controller.MissileDestroyedSilo();
                 death.SetTrigger("DeathTrigger");
             }
             else if (death.GetCurrentAnimatorStateInfo(0).IsName("cityaliveidle"))
             {
-                controller.missileDestroyedCity();
+                controller.MissileDestroyedCity();
                 death.SetTrigger("DeathTrigger");
+            }
+            else
+            {
+                controller.MissileHitDead();
             }
         }
     }

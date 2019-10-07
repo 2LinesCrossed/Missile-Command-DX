@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ExplosionBehavior : MonoBehaviour
 {
-    [SerializeField] float radius = 2f;
+    [SerializeField] float radius = 2f; //Radius is the max value of the Lerp
     
     [SerializeField] GameObject explosionPrefab = null;
 
@@ -28,7 +28,7 @@ public class ExplosionBehavior : MonoBehaviour
             {
                 //This will add the points for destroying a missile. 
                 FindObjectOfType<GameController>().AddMissileDestroyedPoints();
-                Object.Instantiate(explosionPrefab, new Vector3(enemies[i].transform.position.x, enemies[i].transform.position.y, -2), Quaternion.identity);
+                Object.Instantiate(explosionPrefab, new Vector3(enemies[i].transform.position.x, enemies[i].transform.position.y, enemies[i].transform.position.z), Quaternion.identity);
                 Destroy(enemies[i]);
                 
             }

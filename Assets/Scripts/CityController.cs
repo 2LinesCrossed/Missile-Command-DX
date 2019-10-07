@@ -5,15 +5,25 @@ using UnityEngine;
 public class CityController : MonoBehaviour
 {
     //[SerializeField] GameObject minisplosion = null;
+    Animator animator = null;
     // Start is called before the first frame update
     void Start()
     {
-        
+        animator = gameObject.GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
        // if (minisplosion )
+    }
+    public bool CityDead()
+    {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("cityaliveidle"))
+        {
+            return false;
+        }
+        else
+            return true;
     }
 }
