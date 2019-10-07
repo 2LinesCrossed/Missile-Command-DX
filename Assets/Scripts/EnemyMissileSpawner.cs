@@ -19,7 +19,7 @@ public class EnemyMissileSpawner : MonoBehaviour
         float randomX = Random.Range(minX, maxX);
         yValue = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, 0)).y;
         
-        StartCoroutine(SpawnMissiles());
+        
     }
 
     // Update is called once per frame
@@ -37,5 +37,9 @@ public class EnemyMissileSpawner : MonoBehaviour
             --missileToSpawn;
             yield return new WaitForSeconds(missileDelay); //Waits before firing more missiles 
         }
+    }
+    public void StartRound()
+    {
+        StartCoroutine(SpawnMissiles());
     }
 }

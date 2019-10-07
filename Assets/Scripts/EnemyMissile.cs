@@ -12,11 +12,13 @@ public class EnemyMissile : MonoBehaviour
     GameObject[] defenders; 
     Transform target = null;
     Animator death = null;
+    GameController controller = null;
     // Start is called before the first frame update
     void Start()
     {
         defenders = GameObject.FindGameObjectsWithTag("Defenders");
         int ran = Random.Range(0, defenders.Length);
+        controller = FindObjectOfType<GameController>();
         target = defenders[ran].transform; //This gets all of the defenders, setting them as potential attackable objects
         death = defenders[ran].GetComponent<Animator>(); //This gets the animator of the chosen defender, making it so they change state when they're hit
     }
@@ -42,9 +44,16 @@ public class EnemyMissile : MonoBehaviour
             //Debug.Log("Hit " + target.gameObject.name);
             Object.Instantiate(explosionPrefab, new Vector3( transform.position.x, transform.position.y, -2), Quaternion.identity); 
             Destroy(gameObject);
-            
-            death.SetTrigger("DeathTrigger");
-            
+            if ((target.name == "MidSilo" || target.name == "LeftSilo" || target.name == "RightSilo") && death.GetCurrentAnimatorStateInfo(0).IsName("siloalive") )
+            {
+                controller.missileDestroyedSilo();
+                death.SetTrigger("DeathTrigger");
+            }
+            else if (death.GetCurrentAnimatorStateInfo(0).IsName("cityaliveidle"))
+            {
+                controller.missileDestroyedCity();
+                death.SetTrigger("DeathTrigger");
+            }
         }
     }
 

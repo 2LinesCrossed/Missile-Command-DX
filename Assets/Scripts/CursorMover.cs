@@ -22,14 +22,14 @@ public class CursorMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && myGameController.missilesLeft > 0)
+        if (Input.GetMouseButtonDown(0) && myGameController.playermissilesLeft > 0)
         {
             GameObject bestTarget = GetClosestSilo(missileLauncherPrefabs);
             //The missile spawning code. Change this later to rotate the missile properly and for it to only spawn missiles from the closest silo.
 
             
             Object.Instantiate(missilePrefab, bestTarget.transform.position,Quaternion.identity);
-            myGameController.missilesLeft--;
+            myGameController.playermissilesLeft--;
             myGameController.UpdateMissilesLeftText();
         }
     }

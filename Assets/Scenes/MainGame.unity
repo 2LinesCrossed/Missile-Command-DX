@@ -945,7 +945,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -88.25789, w: 0}
   m_textInfo:
     textComponent: {fileID: 0}
     characterCount: 6
@@ -1338,6 +1338,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MidSilo
       objectReference: {fileID: 0}
+    - target: {fileID: 3558907009133894611, guid: ec593546bacb36b41924b204bbb12aa6,
+        type: 3}
+      propertyPath: m_TagString
+      value: Defenders
+      objectReference: {fileID: 0}
     - target: {fileID: 5853841414907728002, guid: ec593546bacb36b41924b204bbb12aa6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1705,7 +1710,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: 'Level: 1'
+  m_text: 'Level: '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1774,10 +1779,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: -10.256036, w: 0}
   m_textInfo:
     textComponent: {fileID: 0}
-    characterCount: 8
+    characterCount: 7
     spriteCount: 0
     spaceCount: 1
-    wordCount: 2
+    wordCount: 1
     linkCount: 0
     lineCount: 1
     pageCount: 1
