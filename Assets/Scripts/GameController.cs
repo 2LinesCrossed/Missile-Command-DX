@@ -9,6 +9,10 @@ public class GameController : MonoBehaviour
     public int missilesLeft = 30;
 
 
+
+    //Score Values
+    private int missileDestroyedPoints = 25;
+
     [SerializeField] private TextMeshProUGUI myScoreText = null;
     [SerializeField] private TextMeshProUGUI myLevelText = null;
     [SerializeField] private TextMeshProUGUI myMissilesLeftText = null;
@@ -39,5 +43,10 @@ public class GameController : MonoBehaviour
         myLevelText.text = "Level: " + level;
     }
 
+    public void AddMissileDestroyedPoints()
+    {
+        score += missileDestroyedPoints;
+        UpdateScoreText();
+    }
 
 }

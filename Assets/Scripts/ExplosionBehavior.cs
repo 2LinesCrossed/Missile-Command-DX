@@ -7,6 +7,10 @@ public class ExplosionBehavior : MonoBehaviour
     [SerializeField] float radius = 2f;
     
     [SerializeField] GameObject explosionPrefab = null;
+
+
+
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -22,7 +26,8 @@ public class ExplosionBehavior : MonoBehaviour
             float distance = Vector3.Distance(gameObject.transform.position, enemies[i].transform.position);
             if (distance < radius)
             {
-                //Debug.Log("explode: " + gameObject.transform.position +" enemissile: " + enemies[i].transform.position + " distance: " + distance + "i: " + i);
+                //This will add the points for destroying a missile. 
+                FindObjectOfType<GameController>().AddMissileDestroyedPoints();
                 Object.Instantiate(explosionPrefab, new Vector3(enemies[i].transform.position.x, enemies[i].transform.position.y, -2), Quaternion.identity);
                 Destroy(enemies[i]);
                 
