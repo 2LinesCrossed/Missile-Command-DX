@@ -30,6 +30,7 @@ public class CursorMover : MonoBehaviour
             
             Object.Instantiate(missilePrefab, bestTarget.transform.position,Quaternion.identity);
             myGameController.missilesLeft--;
+            myGameController.UpdateMissilesLeftText();
         }
     }
 

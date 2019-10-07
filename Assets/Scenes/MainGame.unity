@@ -218,9 +218,9 @@ RectTransform:
   m_Father: {fileID: 1839366720}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 2}
-  m_AnchorMax: {x: 0, y: 2}
-  m_AnchoredPosition: {x: 802, y: -3006}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -158, y: 66}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &255266999
@@ -854,9 +854,9 @@ RectTransform:
   m_Father: {fileID: 1839366720}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 2}
-  m_AnchorMax: {x: 0, y: 2}
-  m_AnchoredPosition: {x: 51, y: -1575}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 51, y: -39}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1063786335
@@ -1680,9 +1680,9 @@ RectTransform:
   m_Father: {fileID: 1839366720}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 2}
-  m_AnchorMax: {x: 0, y: 2}
-  m_AnchoredPosition: {x: 1635, y: -1575}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -285, y: -39}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1909306580
@@ -2100,5 +2100,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3029440570631003009, guid: bfac8a68c9f856844a576bbe6cc985bf,
+        type: 3}
+      propertyPath: myScoreText
+      value: 
+      objectReference: {fileID: 1063786335}
+    - target: {fileID: 3029440570631003009, guid: bfac8a68c9f856844a576bbe6cc985bf,
+        type: 3}
+      propertyPath: myLevelText
+      value: 
+      objectReference: {fileID: 1909306580}
+    - target: {fileID: 3029440570631003009, guid: bfac8a68c9f856844a576bbe6cc985bf,
+        type: 3}
+      propertyPath: myMissilesLeftText
+      value: 
+      objectReference: {fileID: 255266999}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bfac8a68c9f856844a576bbe6cc985bf, type: 3}
