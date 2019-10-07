@@ -22,7 +22,15 @@ public class Scenetransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S) && sceneIndex != 1 )
+
+        SceneSwap();
+        
+        
+
+    }
+    public void SceneSwap()
+    {
+        if (Input.GetKeyDown(KeyCode.S) && sceneIndex != 1)
         {
             sceneName = "MainGame";
             StartCoroutine(LoadScene());
@@ -32,12 +40,12 @@ public class Scenetransition : MonoBehaviour
             sceneName = "Title Screen";
             StartCoroutine(LoadScene());
         }
-        
-        
-        
-
     }
-    //Note to self: Implement a swappable value for the scene name, so that it can work with both the scenes present. 
+    public void SceneReset()
+    {
+        StartCoroutine(LoadScene());
+    }
+
     IEnumerator LoadScene()
     {
         

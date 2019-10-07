@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     public int score = 0;
@@ -12,6 +13,7 @@ public class GameController : MonoBehaviour
     private int enemyMissilesThisRound = 10;
     private int enemyMissilesLeftInRound = 10;
     EnemyMissileSpawner enemyMissileSpawner = null;
+    [SerializeField] GameObject sceneloader = null;
 
     //Score Values
     private int missileDestroyedPoints = 25;
@@ -30,11 +32,19 @@ public class GameController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI totalBonusText = null;
     [SerializeField] private TextMeshProUGUI CountdownText = null;
     [SerializeField] private GameObject endOfRoundPanel = null;
+    [SerializeField] private GameObject startGamePanel = null;
+    [SerializeField] private GameObject gameOverScreen = null;
+    [SerializeField] private TextMeshProUGUI FinalScoreText = null;
+    [SerializeField] private Button closeScreen = null;
 
 
     //Calculations
     //Animator death = null;
     private bool isRoundOver = false;
+    private bool gameOverState = false;
+    int citycount = 6;
+    [SerializeField] GameObject maincam = null;
+    private bool isPaused = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +52,8 @@ public class GameController : MonoBehaviour
         UpdateScoreText();
         UpdateLevelText();
         UpdateMissilesLeftText();
+        //StartCoroutine(LoadIn()); Figure out how to make the program wait for 1.5 seconds before showing the instruction screen. 
+        //InstructionScreen();
         StartRound();
     }
 
@@ -49,11 +61,24 @@ public class GameController : MonoBehaviour
     void Update()
     {
         //Debug.Log(enemyMissilesLeftInRound);
-        if (enemyMissilesLeftInRound <= 0 && isRoundOver == false)
+        if (enemyMissilesLeftInRound <= 0 && isRoundOver == false && gameOverState == false)
         {
             isRoundOver = true;
             StartCoroutine(EndOfRound());
         }
+        
+        GameOver();
+    }
+    private void InstructionScreen()
+    {
+        startGamePanel.SetActive(true);
+        closeScreen.onClick.AddListener(CloseScreen);
+        Time.timeScale = 0.0f;
+    }
+    private void CloseScreen()
+    {
+        Time.timeScale = 1.0f;
+        startGamePanel.SetActive(false);
     }
     public void UpdateMissilesLeftText()
     {
@@ -99,26 +124,71 @@ public class GameController : MonoBehaviour
         enemyMissilesLeftInRound = enemyMissilesThisRound;
         enemyMissileSpawner.StartRound();
     }
+    private void CitySearch()
+    {
+        citycount = 6;
+        CityController[] cities = GameObject.FindObjectsOfType<CityController>();
+        foreach (CityController city in cities)
+            
+            if (city.CityDead() == true)
+            {
+                citycount--;
+            }
+            //Debug.Log(citycount);
+    }
+
+    private void GameOver()
+    {
+        int siloDeath = maincam.GetComponent<CursorMover>().DeathCounter();
+        CitySearch();
+        if ((citycount == 0 || siloDeath >= 3) )
+        {
+            //This currently seems to break specifically on silo-based game overs. But why?
+            gameOverScreen.SetActive(true);
+            gameOverState = true;
+            FinalScoreText.text = "Final Score: " + score;
+            if (Time.timeScale == 1.0f && isPaused == false)
+            {
+                Time.timeScale = 0.0f;
+                isPaused = true;
+            }
+            if (Input.GetKeyDown(KeyCode.Space) && gameOverState == true)
+                {
+                    
+                    Time.timeScale = 1.0f;
+                    gameOverScreen.SetActive(false);
+                    gameOverState = false;
+                    ResetGame();
+                }
+            
+        }
+    }
+    private void ResetGame()
+    {
+        /*score = 0;
+        level = 1;
+        playermissilesLeft = 30;
+        enemymissileSpeed = 3f;
+        enemyMissilesThisRound = 10;
+        enemyMissilesLeftInRound = 10;
+       */
+        sceneloader.GetComponent<Scenetransition>().sceneName = "MainGame";
+        sceneloader.GetComponent<Scenetransition>().SceneReset();
+    }
     public IEnumerator EndOfRound()
     {
         yield return new WaitForSeconds(0.5f);
          
         endOfRoundPanel.SetActive(true);
         int leftOverMissileBonus = playermissilesLeft * missileEndOfRoundpoints;
-        int citycount = 0;
-        CityController[] cities = GameObject.FindObjectsOfType<CityController>();
-        foreach (CityController city in cities)
 
-            if (city.CityDead() == false)
-             {
-            citycount++;
-             }
+        CitySearch();
 
         int leftOverCityBonus = citycount * cityEndOfRoundpoints;
         int totalBonus = leftOverCityBonus + leftOverMissileBonus;
         leftOverMissileBonusText.text = "Left over missile bonus: " + leftOverMissileBonus;
         leftOverCityBonusText.text = "Left over city bonus: " + leftOverCityBonus;
-        totalBonusText.text = "Left over missile bonus: " + totalBonus;
+        totalBonusText.text = "Total bonus: " + totalBonus;
         score += totalBonus;
         UpdateScoreText();
 
@@ -142,5 +212,9 @@ public class GameController : MonoBehaviour
         StartRound();
         UpdateLevelText();
         UpdateMissilesLeftText();
+    }
+    public IEnumerator LoadIn()
+    {
+        yield return new WaitForSeconds(1.5f);
     }
 }
