@@ -21,6 +21,7 @@ public class EnemyMissile : MonoBehaviour
         controller = FindObjectOfType<GameController>();
         target = defenders[ran].transform; //This gets all of the defenders, setting them as potential attackable objects
         death = defenders[ran].GetComponent<Animator>(); //This gets the animator of the chosen defender, making it so they change state when they're hit
+        speed = controller.enemymissileSpeed;
     }
 
     // Update is called once per frame
@@ -42,7 +43,7 @@ public class EnemyMissile : MonoBehaviour
         {
             
             //Debug.Log("Hit " + target.gameObject.name);
-            Object.Instantiate(explosionPrefab, new Vector3( transform.position.x, transform.position.y, -2), Quaternion.identity); 
+            Object.Instantiate(explosionPrefab, new Vector3( transform.position.x, transform.position.y, -2), Quaternion.identity);
             Destroy(gameObject);
             if ((target.name == "MidSilo" || target.name == "LeftSilo" || target.name == "RightSilo") && death.GetCurrentAnimatorStateInfo(0).IsName("siloalive") )
             {
@@ -58,6 +59,7 @@ public class EnemyMissile : MonoBehaviour
             {
                 controller.MissileHitDead();
             }
+            
         }
     }
 

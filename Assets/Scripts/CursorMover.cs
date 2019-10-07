@@ -9,8 +9,10 @@ public class CursorMover : MonoBehaviour
     [SerializeField] GameObject missilePrefab = null;
     [SerializeField] GameObject[] missileLauncherPrefabs = null;
     private Vector2 cursorHotspot;
+    GameObject bestTarget = null;
     private GameController myGameController;
-
+    private Animator deathCheck = null;
+    private int totalDeath = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,32 +28,52 @@ public class CursorMover : MonoBehaviour
         {
             GameObject bestTarget = GetClosestSilo(missileLauncherPrefabs);
             //The missile spawning code. Change this later to rotate the missile properly and for it to only spawn missiles from the closest silo.
-
             
-            Object.Instantiate(missilePrefab, bestTarget.transform.position,Quaternion.identity);
-            myGameController.playermissilesLeft--;
-            myGameController.UpdateMissilesLeftText();
+            if (bestTarget != null && totalDeath < 3)
+            {
+                DeathCounter();
+                if (totalDeath < 3)
+                {
+                    Object.Instantiate(missilePrefab, bestTarget.transform.position, Quaternion.identity);
+                    myGameController.playermissilesLeft--;
+                    myGameController.UpdateMissilesLeftText();
+                }
+            }
         }
     }
 
     
     private GameObject GetClosestSilo (GameObject[] missileLauncherPrefabs)
     {
-        GameObject bestTarget = null;
+        
         float closestDistanceSqr = Mathf.Infinity;
         Vector2 currentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         foreach(GameObject potentialTarget in missileLauncherPrefabs)
         {
             Vector3 directionToTarget = potentialTarget.transform.position - new Vector3(currentPosition.x, currentPosition.y, 0);
             float dSqrToTarget = directionToTarget.sqrMagnitude;
-            if(dSqrToTarget < closestDistanceSqr)
+            deathCheck = potentialTarget.GetComponent<Animator>();
+            if(dSqrToTarget < closestDistanceSqr && deathCheck.GetCurrentAnimatorStateInfo(0).IsName("siloalive"))
             {
                 closestDistanceSqr = dSqrToTarget;
                 bestTarget = potentialTarget;
             }
+            
        }
        return bestTarget;
     }
     
-    
+    public int DeathCounter()
+    {
+        totalDeath = 0;
+        foreach (GameObject missilelauncher in missileLauncherPrefabs)
+        {
+            
+            deathCheck = missilelauncher.GetComponent<Animator>();
+            if (!deathCheck.GetCurrentAnimatorStateInfo(0).IsName("siloalive"))
+            {
+                totalDeath++;
+            }
+        }return totalDeath;
+    }
 }

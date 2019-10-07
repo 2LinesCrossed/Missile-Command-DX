@@ -6,6 +6,8 @@ public class GameController : MonoBehaviour
 {
     public int score = 0;
     public int level = 1;
+    public float enemymissileSpeed = 3f;
+    [SerializeField] private float enemyMissileSpeedMultiplier = 1.1f;
     public int playermissilesLeft = 30;
     private int enemyMissilesThisRound = 10;
     private int enemyMissilesLeftInRound = 10;
@@ -47,7 +49,7 @@ public class GameController : MonoBehaviour
     void Update()
     {
         //Debug.Log(enemyMissilesLeftInRound);
-        if (enemyMissilesLeftInRound <= 0)
+        if (enemyMissilesLeftInRound <= 0 && isRoundOver == false)
         {
             isRoundOver = true;
             StartCoroutine(EndOfRound());
@@ -121,6 +123,10 @@ public class GameController : MonoBehaviour
         UpdateScoreText();
 
         //Updating new round values
+        CountdownText.text = "5";
+        yield return new WaitForSeconds(1f);
+        CountdownText.text = "4";
+        yield return new WaitForSeconds(1f);
         CountdownText.text = "3";
         yield return new WaitForSeconds(1f);
         CountdownText.text = "2";
@@ -131,8 +137,10 @@ public class GameController : MonoBehaviour
         endOfRoundPanel.SetActive(false);
         playermissilesLeft = 30;
         level++;
+        enemymissileSpeed *= enemyMissileSpeedMultiplier;
+        isRoundOver = false;
+        StartRound();
         UpdateLevelText();
         UpdateMissilesLeftText();
-        StartRound();
     }
 }

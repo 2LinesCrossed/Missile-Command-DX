@@ -33,14 +33,7 @@ public class ExplosionBehavior : MonoBehaviour
                 
             }
         }
-        //Maybe you shouldn't do this? I think it would be better for the missile to handle the instantiation. 
-        /*
-        Vector3 positionA = transform.position;
-        if (Vector3.Distance(positionA, enemy.transform.position) > radius) //This is currently an infinite loop that breaks the game
-        {
-            destroyEnemy();
-        }
-        */
+        
     }
   
 }

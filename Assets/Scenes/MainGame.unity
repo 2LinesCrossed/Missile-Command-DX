@@ -4232,5 +4232,10 @@ PrefabInstance:
       propertyPath: CountdownText
       value: 
       objectReference: {fileID: 1743073991}
+    - target: {fileID: 3029440570631003009, guid: bfac8a68c9f856844a576bbe6cc985bf,
+        type: 3}
+      propertyPath: enemyMissileSpeedMultiplier
+      value: 1.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bfac8a68c9f856844a576bbe6cc985bf, type: 3}

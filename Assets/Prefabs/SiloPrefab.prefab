@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6124767665971076786}
   - component: {fileID: 927529577671382338}
   - component: {fileID: 7831495448971599408}
+  - component: {fileID: 6777713725559563922}
   m_Layer: 0
   m_Name: SiloPrefab
   m_TagString: Defenders
@@ -126,3 +127,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &6777713725559563922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3558907009133894611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b2f67900d6eb6f4596440d1fb47d0fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
