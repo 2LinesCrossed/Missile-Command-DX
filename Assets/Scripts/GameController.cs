@@ -38,23 +38,30 @@ public class GameController : MonoBehaviour
     [SerializeField] private Button closeScreen = null;
 
 
-    //Calculations
-    //Animator death = null;
+    //Calculations used for various aspects of administrative game functionality. 
+    public bool gameStart = false;
     private bool isRoundOver = false;
     private bool gameOverState = false;
     int citycount = 6;
     [SerializeField] GameObject maincam = null;
     private bool isPaused = false;
+    public bool coopCheck = false;
     // Start is called before the first frame update
     void Start()
     {
         enemyMissileSpawner = GameObject.FindObjectOfType<EnemyMissileSpawner>();
-        UpdateScoreText();
-        UpdateLevelText();
-        UpdateMissilesLeftText();
-        //StartCoroutine(LoadIn()); Figure out how to make the program wait for 1.5 seconds before showing the instruction screen. 
-        //InstructionScreen();
-        StartRound();
+        gameStart = false;
+        if (sceneloader.GetComponent<Scenetransition>().sceneName == "CoopScene")
+            coopCheck = true;
+        if (coopCheck == false)
+        {
+            UpdateScoreText();
+            UpdateLevelText();
+            UpdateMissilesLeftText();
+            StartCoroutine(LoadIn());
+
+            StartCoroutine(MissileWaiter());
+        }
     }
 
     // Update is called once per frame
@@ -71,14 +78,16 @@ public class GameController : MonoBehaviour
     }
     private void InstructionScreen()
     {
+        Time.timeScale = 0.0f;
         startGamePanel.SetActive(true);
         closeScreen.onClick.AddListener(CloseScreen);
-        Time.timeScale = 0.0f;
+        
     }
     private void CloseScreen()
     {
         Time.timeScale = 1.0f;
         startGamePanel.SetActive(false);
+        gameStart = true;
     }
     public void UpdateMissilesLeftText()
     {
@@ -143,7 +152,7 @@ public class GameController : MonoBehaviour
         CitySearch();
         if ((citycount == 0 || siloDeath >= 3) )
         {
-            //This currently seems to break specifically on silo-based game overs. But why?
+            
             gameOverScreen.SetActive(true);
             gameOverState = true;
             FinalScoreText.text = "Final Score: " + score;
@@ -160,6 +169,11 @@ public class GameController : MonoBehaviour
                     gameOverState = false;
                     ResetGame();
                 }
+            if (Input.GetKeyDown(KeyCode.Q) && gameOverState == true)
+            {
+                Time.timeScale = 1.0f;
+                
+            }
             
         }
     }
@@ -173,6 +187,11 @@ public class GameController : MonoBehaviour
         enemyMissilesLeftInRound = 10;
        */
         sceneloader.GetComponent<Scenetransition>().sceneName = "MainGame";
+        sceneloader.GetComponent<Scenetransition>().SceneReset();
+    }
+    private void QuitGame()
+    {
+        sceneloader.GetComponent<Scenetransition>().sceneName = "Title Screen";
         sceneloader.GetComponent<Scenetransition>().SceneReset();
     }
     public IEnumerator EndOfRound()
@@ -189,6 +208,10 @@ public class GameController : MonoBehaviour
         leftOverMissileBonusText.text = "Left over missile bonus: " + leftOverMissileBonus;
         leftOverCityBonusText.text = "Left over city bonus: " + leftOverCityBonus;
         totalBonusText.text = "Total bonus: " + totalBonus;
+
+
+
+
         score += totalBonus;
         UpdateScoreText();
 
@@ -207,7 +230,8 @@ public class GameController : MonoBehaviour
         endOfRoundPanel.SetActive(false);
         playermissilesLeft = 30;
         level++;
-        enemymissileSpeed *= enemyMissileSpeedMultiplier;
+        enemymissileSpeed = enemymissileSpeed * enemyMissileSpeedMultiplier;
+        enemyMissileSpeedMultiplier += 0.1f;
         isRoundOver = false;
         StartRound();
         UpdateLevelText();
@@ -216,5 +240,11 @@ public class GameController : MonoBehaviour
     public IEnumerator LoadIn()
     {
         yield return new WaitForSeconds(1.5f);
+        InstructionScreen();
+    }
+    public IEnumerator MissileWaiter()
+    {
+        yield return new WaitForSeconds(1.5f);
+        StartRound();
     }
 }

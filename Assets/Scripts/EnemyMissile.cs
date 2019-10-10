@@ -13,6 +13,7 @@ public class EnemyMissile : MonoBehaviour
     Transform target = null;
     Animator death = null;
     GameController controller = null;
+    private AudioSource deathsound = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +23,7 @@ public class EnemyMissile : MonoBehaviour
         target = defenders[ran].transform; //This gets all of the defenders, setting them as potential attackable objects
         death = defenders[ran].GetComponent<Animator>(); //This gets the animator of the chosen defender, making it so they change state when they're hit
         speed = controller.enemymissileSpeed;
+        deathsound = defenders[ran].GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -49,11 +51,13 @@ public class EnemyMissile : MonoBehaviour
             {
                 controller.MissileDestroyedSilo();
                 death.SetTrigger("DeathTrigger");
+                deathsound.Play();
             }
             else if (death.GetCurrentAnimatorStateInfo(0).IsName("cityaliveidle"))
             {
                 controller.MissileDestroyedCity();
                 death.SetTrigger("DeathTrigger");
+                deathsound.Play();
             }
             else
             {

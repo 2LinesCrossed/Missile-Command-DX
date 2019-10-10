@@ -14,6 +14,7 @@ public class EnemyMissileSpawner : MonoBehaviour
     void Start()
     {
         //Sets the minimum and the maximum spawn values to be at the top of the screen, using the camera.
+        //If the game mode is coop, changes the values and call methodology to change the gameplay. 
         minX = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, 0)).x;
         maxX = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, 0)).x;
         float randomX = Random.Range(minX, maxX);

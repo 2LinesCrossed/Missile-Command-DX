@@ -12,7 +12,7 @@ public class Scenetransition : MonoBehaviour
     public Animator sceneSition;
     public string sceneName;
     private int sceneIndex;
-    //dummy comment
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -40,15 +40,20 @@ public class Scenetransition : MonoBehaviour
             sceneName = "Title Screen";
             StartCoroutine(LoadScene());
         }
+        /*if (Input.GetKeyDown(KeyCode.V) && sceneIndex != 2)
+         * {
+         * }
+         */
     }
     public void SceneReset()
     {
+        //Public function called by both gamemodes in order to swap the scenes properly. 
         StartCoroutine(LoadScene());
     }
 
     IEnumerator LoadScene()
     {
-        
+     //Coroutine that loads the scene using the set scene name.    
         sceneSition.SetTrigger("end");
         yield return new WaitForSeconds(1.5f);
         SceneManager.LoadScene(sceneName);
