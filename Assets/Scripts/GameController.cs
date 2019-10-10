@@ -14,7 +14,7 @@ public class GameController : MonoBehaviour
     private int enemyMissilesLeftInRound = 10;
     EnemyMissileSpawner enemyMissileSpawner = null;
     [SerializeField] GameObject sceneloader = null;
-
+    SoundController soundController = null;
     //Score Values
     private int missileDestroyedPoints = 25;
     //private int cityLossPenalty = 100;
@@ -26,7 +26,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI myScoreText = null;
     [SerializeField] private TextMeshProUGUI myLevelText = null;
     [SerializeField] private TextMeshProUGUI myMissilesLeftText = null;
-
+    [SerializeField] private TextMeshProUGUI lowMissileWarning = null;
+    [SerializeField] private TextMeshProUGUI noMissileWarning = null;
     [SerializeField] private TextMeshProUGUI leftOverMissileBonusText = null;
     [SerializeField] private TextMeshProUGUI leftOverCityBonusText = null;
     [SerializeField] private TextMeshProUGUI totalBonusText = null;
@@ -42,6 +43,8 @@ public class GameController : MonoBehaviour
     public bool gameStart = false;
     private bool isRoundOver = false;
     private bool gameOverState = false;
+    private bool warned = false;
+    private bool zeroMissiles = false;
     int citycount = 6;
     [SerializeField] GameObject maincam = null;
     private bool isPaused = false;
@@ -50,6 +53,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         enemyMissileSpawner = GameObject.FindObjectOfType<EnemyMissileSpawner>();
+        soundController = GameObject.FindObjectOfType<SoundController>();
         gameStart = false;
         if (sceneloader.GetComponent<Scenetransition>().sceneName == "CoopScene")
             coopCheck = true;
@@ -73,8 +77,25 @@ public class GameController : MonoBehaviour
             isRoundOver = true;
             StartCoroutine(EndOfRound());
         }
-        
+        MissileCheck();
         GameOver();
+        
+    }
+    private void MissileCheck()
+    {
+        if (playermissilesLeft == 15 && warned == false)
+        {
+            soundController.LowMissileSFX();
+            warned = true;
+            lowMissileWarning.gameObject.SetActive(true);
+        }
+        else if (playermissilesLeft == 0 && zeroMissiles == false)
+        {
+            soundController.NoMissilesSFX();
+            zeroMissiles = true;
+            noMissileWarning.gameObject.SetActive(true);
+            lowMissileWarning.gameObject.SetActive(false);
+        }
     }
     private void InstructionScreen()
     {
@@ -155,9 +176,11 @@ public class GameController : MonoBehaviour
             
             gameOverScreen.SetActive(true);
             gameOverState = true;
+            
             FinalScoreText.text = "Final Score: " + score;
             if (Time.timeScale == 1.0f && isPaused == false)
             {
+                soundController.GameOverSFX();
                 Time.timeScale = 0.0f;
                 isPaused = true;
             }
@@ -179,13 +202,7 @@ public class GameController : MonoBehaviour
     }
     private void ResetGame()
     {
-        /*score = 0;
-        level = 1;
-        playermissilesLeft = 30;
-        enemymissileSpeed = 3f;
-        enemyMissilesThisRound = 10;
-        enemyMissilesLeftInRound = 10;
-       */
+        
         sceneloader.GetComponent<Scenetransition>().sceneName = "MainGame";
         sceneloader.GetComponent<Scenetransition>().SceneReset();
     }
@@ -200,7 +217,7 @@ public class GameController : MonoBehaviour
          
         endOfRoundPanel.SetActive(true);
         int leftOverMissileBonus = playermissilesLeft * missileEndOfRoundpoints;
-
+        soundController.StartRoundSFX();
         CitySearch();
 
         int leftOverCityBonus = citycount * cityEndOfRoundpoints;
@@ -233,6 +250,10 @@ public class GameController : MonoBehaviour
         enemymissileSpeed = enemymissileSpeed * enemyMissileSpeedMultiplier;
         enemyMissileSpeedMultiplier += 0.1f;
         isRoundOver = false;
+        warned = false;
+        zeroMissiles = false;
+        noMissileWarning.gameObject.SetActive(false);
+        lowMissileWarning.gameObject.SetActive(false);
         StartRound();
         UpdateLevelText();
         UpdateMissilesLeftText();
