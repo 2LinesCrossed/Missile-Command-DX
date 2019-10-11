@@ -63,6 +63,7 @@ public class GameController : MonoBehaviour
         {
             coopCheck = true;
             playermissilesLeft = 15;
+            enemyMissileSpawner.missileToSpawn = 0;
             UpdateMissilesLeftText();
             coopcontroller = GameObject.FindObjectOfType<CoopScript>();
             coopcontroller.LoadCoop();

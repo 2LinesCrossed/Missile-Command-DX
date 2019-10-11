@@ -9,6 +9,7 @@ public class CoopScript : MonoBehaviour
     public int turncount = 0;
     public int enemyCharges = 5;
     GameController controller = null;
+    EnemyMissileSpawner missileSpawner = null;
     private double timer = 0.0f;
     [SerializeField] private TextMeshProUGUI totalBonusText = null;
     [SerializeField] private TextMeshProUGUI CountdownText = null;
@@ -18,10 +19,14 @@ public class CoopScript : MonoBehaviour
 
 
     private bool addedPlayerMissile = false;
+    public bool leftPress = false;
+    public bool downPress = false;
+    public bool rightPress = false;
     // Start is called before the first frame update
     void Start()
     {
         controller = FindObjectOfType<GameController>();
+        missileSpawner = FindObjectOfType<EnemyMissileSpawner>();
     }
 
     // Update is called once per frame
@@ -31,11 +36,14 @@ public class CoopScript : MonoBehaviour
         StartCoroutine(ReloadMissiles());
         CountdownText.text = "Survived for: " + timer.ToString("#.##");
         timer += Time.deltaTime;
+        FireEnemy();
     }
     public void LoadCoop()
     {
         StartCoroutine(LoadIn());
     }
+
+
     public IEnumerator LoadIn()
     {
         yield return new WaitForSeconds(1.5f);
@@ -72,5 +80,37 @@ public class CoopScript : MonoBehaviour
         timer = 0;
         CountdownText.gameObject.SetActive(true);
     }
+    private void FireEnemy()
+    {
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            downPress = true;
+            leftPress = false;
+            rightPress = false;
+            missileSpawner.missileToSpawn++;
+            enemyCharges--;
+            missileSpawner.StartRound();
 
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            downPress = false;
+            leftPress = true;
+            rightPress = false;
+            missileSpawner.missileToSpawn++;
+            enemyCharges--;
+            missileSpawner.StartRound();
+
+        }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            downPress = false;
+            leftPress = false;
+            rightPress = true;
+            missileSpawner.missileToSpawn++;
+            enemyCharges--;
+            missileSpawner.StartRound();
+
+        }
+    }
 }

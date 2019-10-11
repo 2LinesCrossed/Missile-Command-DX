@@ -14,14 +14,52 @@ public class EnemyMissile : MonoBehaviour
     Animator death = null;
     GameController controller = null;
     private AudioSource deathsound = null;
+    int ran = 0;
+    CoopScript coop = null;
     // Start is called before the first frame update
     void Start()
     {
-        defenders = GameObject.FindGameObjectsWithTag("Defenders");
-        int ran = Random.Range(0, defenders.Length);
+        coop = FindObjectOfType<CoopScript>();
         controller = FindObjectOfType<GameController>();
-        target = defenders[ran].transform; //This gets all of the defenders, setting them as potential attackable objects
-        death = defenders[ran].GetComponent<Animator>(); //This gets the animator of the chosen defender, making it so they change state when they're hit
+        defenders = GameObject.FindGameObjectsWithTag("Defenders");
+        if (controller.coopCheck == false)
+        {
+            ran = Random.Range(0, defenders.Length);
+            
+            target = defenders[ran].transform; //This gets all of the defenders, setting them as potential attackable objects
+            death = defenders[ran].GetComponent<Animator>(); //This gets the animator of the chosen defender, making it so they change state when they're hit
+            
+        }
+        else
+        {
+            if (coop.downPress)
+            {
+                ran = Random.Range(3, 5);
+                
+
+                target = defenders[ran].transform; //This gets all of the defenders, setting them as potential attackable objects
+                death = defenders[ran].GetComponent<Animator>(); //This gets the animator of the chosen defender, making it so they change state when they're hit
+
+            }
+            if (coop.leftPress)
+            {
+                ran = Random.Range(0, 2);
+                
+
+                target = defenders[ran].transform; //This gets all of the defenders, setting them as potential attackable objects
+                death = defenders[ran].GetComponent<Animator>(); //This gets the animator of the chosen defender, making it so they change state when they're hit
+
+            }
+            if (coop.rightPress)
+            {
+                ran = Random.Range(6, 8);
+                
+
+                target = defenders[ran].transform; //This gets all of the defenders, setting them as potential attackable objects
+                death = defenders[ran].GetComponent<Animator>(); //This gets the animator of the chosen defender, making it so they change state when they're hit
+
+            }
+        }
         speed = controller.enemymissileSpeed;
         deathsound = defenders[ran].GetComponent<AudioSource>();
 
