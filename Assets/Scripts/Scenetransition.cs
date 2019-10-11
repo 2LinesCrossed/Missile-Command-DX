@@ -40,10 +40,12 @@ public class Scenetransition : MonoBehaviour
             sceneName = "Title Screen";
             StartCoroutine(LoadScene());
         }
-        /*if (Input.GetKeyDown(KeyCode.V) && sceneIndex != 2)
-         * {
-         * }
-         */
+        if (Input.GetKeyDown(KeyCode.V) && sceneIndex != 2)
+          {
+            sceneName = "CoopScene";
+            StartCoroutine(LoadScene());
+        }
+         
     }
     public void SceneReset()
     {

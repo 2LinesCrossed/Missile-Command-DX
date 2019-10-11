@@ -13,6 +13,17 @@ public class PlayerMissileController : MonoBehaviour
     {
         target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
+        Vector2 direction = (target - (Vector2)transform.position);
+
+        float angle = 0;
+        if (direction.x > 0)
+            angle = 90 - Mathf.Acos(direction.x / direction.magnitude) / Mathf.PI * 180.0f;
+        else
+            angle = (Mathf.Acos(-direction.x / direction.magnitude) / Mathf.PI * 180.0f - 90);
+
+        transform.rotation = Quaternion.Euler(0, 0, -angle);
+
+
         /*
         var travelVec = ((Vector3)target - transform.position);
         var radAngle = Mathf.Acos(travelVec.x / travelVec.magnitude);

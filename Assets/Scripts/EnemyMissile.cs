@@ -24,13 +24,26 @@ public class EnemyMissile : MonoBehaviour
         death = defenders[ran].GetComponent<Animator>(); //This gets the animator of the chosen defender, making it so they change state when they're hit
         speed = controller.enemymissileSpeed;
         deathsound = defenders[ran].GetComponent<AudioSource>();
+
+        //Rotation calcs. I had to get someone else's advice for this part as I'm not good with math, so trigonometry is something I'll
+        //have to revise for my own studies. 
+        Vector2 direction = (target.position - transform.position);
+        float angle = 0;
+        if ( direction.x > 0 )
+            angle = 90 - Mathf.Acos(direction.x / direction.magnitude) / Mathf.PI * 180.0f;
+        else
+            angle =  (Mathf.Acos(-direction.x / direction.magnitude) / Mathf.PI * 180.0f - 90);
+
+        transform.rotation = Quaternion.Euler(0, 0, angle );
+
     }
 
     // Update is called once per frame
     void Update()
     {
         //Makes the enemy missile move towards the selected allied city. 
-        transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime); 
+        transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+        
         checkDistance();
         
     }

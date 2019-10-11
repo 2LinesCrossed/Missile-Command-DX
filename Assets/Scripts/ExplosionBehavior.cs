@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class ExplosionBehavior : MonoBehaviour
 {
-    [SerializeField] float radius = 2f; //Radius is the max value of the Lerp
+    //[SerializeField] float radius = 2f; //Radius is the max value of the Lerp
     
     [SerializeField] GameObject explosionPrefab = null;
-
+    Transform explosion = null;
 
 
     
     // Start is called before the first frame update
     void Start()
     {
-        
+        explosion = gameObject.transform;
     }
 
     // Update is called once per frame
@@ -25,6 +25,7 @@ public class ExplosionBehavior : MonoBehaviour
         for (int i = 0; i < enemies.Length ; i++ ) 
         {
             float distance = Vector3.Distance(gameObject.transform.position, enemies[i].transform.position);
+            double radius = explosion.localScale.x;
             if (distance < radius)
             {
                 //This will add the points for destroying a missile as well as spawning another explosion. 
