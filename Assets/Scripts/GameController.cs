@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
     public int score = 0;
@@ -15,6 +16,7 @@ public class GameController : MonoBehaviour
     EnemyMissileSpawner enemyMissileSpawner = null;
     [SerializeField] GameObject sceneloader = null;
     SoundController soundController = null;
+    CoopScript coopcontroller = null;
     //Score Values
     private int missileDestroyedPoints = 25;
     //private int cityLossPenalty = 100;
@@ -37,7 +39,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject gameOverScreen = null;
     [SerializeField] private TextMeshProUGUI FinalScoreText = null;
     [SerializeField] private Button closeScreen = null;
-
+    
 
     //Calculations used for various aspects of administrative game functionality. 
     public bool gameStart = false;
@@ -54,9 +56,17 @@ public class GameController : MonoBehaviour
     {
         enemyMissileSpawner = GameObject.FindObjectOfType<EnemyMissileSpawner>();
         soundController = GameObject.FindObjectOfType<SoundController>();
+        sceneloader.GetComponent<Scenetransition>().sceneName = SceneManager.GetActiveScene().name;
+
         gameStart = false;
         if (sceneloader.GetComponent<Scenetransition>().sceneName == "CoopScene")
+        {
             coopCheck = true;
+            playermissilesLeft = 15;
+            UpdateMissilesLeftText();
+            coopcontroller = GameObject.FindObjectOfType<CoopScript>();
+            coopcontroller.LoadCoop();
+        }
         if (coopCheck == false)
         {
             UpdateScoreText();
@@ -72,14 +82,16 @@ public class GameController : MonoBehaviour
     void Update()
     {
         //Debug.Log(enemyMissilesLeftInRound);
-        if (enemyMissilesLeftInRound <= 0 && isRoundOver == false && gameOverState == false)
-        {
-            isRoundOver = true;
-            StartCoroutine(EndOfRound());
-        }
-        MissileCheck();
-        GameOver();
+        if (coopCheck == false) { 
+                if (enemyMissilesLeftInRound <= 0 && isRoundOver == false && gameOverState == false)
+            {
+                isRoundOver = true;
+                StartCoroutine(EndOfRound());
+            }
         
+            MissileCheck();
+            GameOver();
+        }
     }
     private void MissileCheck()
     {
@@ -97,6 +109,7 @@ public class GameController : MonoBehaviour
             lowMissileWarning.gameObject.SetActive(false);
         }
     }
+    
     private void InstructionScreen()
     {
         Time.timeScale = 0.0f;
@@ -104,6 +117,7 @@ public class GameController : MonoBehaviour
         closeScreen.onClick.AddListener(CloseScreen);
         
     }
+    
     private void CloseScreen()
     {
         Time.timeScale = 1.0f;
@@ -204,6 +218,12 @@ public class GameController : MonoBehaviour
     {
         
         sceneloader.GetComponent<Scenetransition>().sceneName = "MainGame";
+        sceneloader.GetComponent<Scenetransition>().SceneReset();
+    }
+    private void ResetCoop()
+    {
+
+        sceneloader.GetComponent<Scenetransition>().sceneName = "CoopScene";
         sceneloader.GetComponent<Scenetransition>().SceneReset();
     }
     private void QuitGame()

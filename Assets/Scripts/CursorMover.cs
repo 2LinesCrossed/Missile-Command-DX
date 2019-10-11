@@ -27,7 +27,7 @@ public class CursorMover : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && myGameController.playermissilesLeft > 0 && myGameController.gameStart == true)
         {
             GameObject bestTarget = GetClosestSilo(missileLauncherPrefabs);
-            //The missile spawning code. Change this later to rotate the missile properly
+            
             
             if (bestTarget != null && totalDeath < 3)
             {
