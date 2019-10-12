@@ -37,7 +37,7 @@ public class EnemyMissileSpawner : MonoBehaviour
             float yValue = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, 0)).y;
             Instantiate(enemyPrefab, new Vector3(randomX, yValue + yPadding, 0), Quaternion.identity);
             --missileToSpawn;
-            Debug.Log("Spawned Missile");
+            
             yield return new WaitForSeconds(missileDelay); //Waits before firing more missiles 
         }
     }

@@ -43,7 +43,7 @@ public class GameController : MonoBehaviour
 
     //Calculations used for various aspects of administrative game functionality. 
     public bool gameStart = false;
-    private bool isRoundOver = false;
+    public bool isRoundOver = false;
     private bool gameOverState = false;
     private bool warned = false;
     private bool zeroMissiles = false;
@@ -92,6 +92,10 @@ public class GameController : MonoBehaviour
         
             MissileCheck();
             GameOver();
+        }
+        else
+        {
+            CoopRoundOver();
         }
     }
     private void MissileCheck()
@@ -214,8 +218,50 @@ public class GameController : MonoBehaviour
             }
             
         }
+
     }
-    private void ResetGame()
+    private void CoopRoundOver()
+    {
+        int siloDeath = maincam.GetComponent<CursorMover>().DeathCounter();
+        CitySearch();
+        if ((citycount == 0 || siloDeath >= 3))
+        {
+            isRoundOver = true;
+            if (coopcontroller.turncount == 0)
+            {
+                coopcontroller.RoundOverCoop();
+                citycount = 6;
+                siloDeath = 0;
+            }
+            if (coopcontroller.turncount == 1)
+            {
+                coopcontroller.coopGameOver = true;
+                coopcontroller.CoopGameOver();
+                if (Time.timeScale == 1.0f && isPaused == false)
+                {
+                    soundController.GameOverSFX();
+                    Time.timeScale = 0.0f;
+                    isPaused = true;
+                }
+                if (Input.GetKeyDown(KeyCode.Space) && coopcontroller.coopGameOver == true)
+                {
+
+                    Time.timeScale = 1.0f;
+                    //gameOverScreen.SetActive(false);    Replace with Coop end screen
+                    coopcontroller.coopGameOver = false;
+                    ResetCoop();
+                }
+                if (Input.GetKeyDown(KeyCode.Q) && coopcontroller.coopGameOver == true)
+                {
+                    Time.timeScale = 1.0f;
+
+                }
+            }
+            
+
+        }
+    }
+        private void ResetGame()
     {
         
         sceneloader.GetComponent<Scenetransition>().sceneName = "MainGame";

@@ -34,7 +34,7 @@ public class EnemyMissile : MonoBehaviour
         {
             if (coop.downPress)
             {
-                ran = Random.Range(3, 5);
+                ran = Random.Range(3, 6);
                 
 
                 target = defenders[ran].transform; //This gets all of the defenders, setting them as potential attackable objects
@@ -43,7 +43,7 @@ public class EnemyMissile : MonoBehaviour
             }
             if (coop.leftPress)
             {
-                ran = Random.Range(0, 2);
+                ran = Random.Range(0, 3);
                 
 
                 target = defenders[ran].transform; //This gets all of the defenders, setting them as potential attackable objects
@@ -52,7 +52,7 @@ public class EnemyMissile : MonoBehaviour
             }
             if (coop.rightPress)
             {
-                ran = Random.Range(6, 8);
+                ran = Random.Range(6, 9);
                 
 
                 target = defenders[ran].transform; //This gets all of the defenders, setting them as potential attackable objects
@@ -101,12 +101,14 @@ public class EnemyMissile : MonoBehaviour
             if ((target.name == "MidSilo" || target.name == "LeftSilo" || target.name == "RightSilo") && death.GetCurrentAnimatorStateInfo(0).IsName("siloalive") )
             {
                 controller.MissileDestroyedSilo();
+                death.ResetTrigger("ReviveTrigger");
                 death.SetTrigger("DeathTrigger");
                 deathsound.Play();
             }
             else if (death.GetCurrentAnimatorStateInfo(0).IsName("cityaliveidle"))
             {
                 controller.MissileDestroyedCity();
+                death.ResetTrigger("ReviveTrigger");
                 death.SetTrigger("DeathTrigger");
                 deathsound.Play();
             }
@@ -118,38 +120,5 @@ public class EnemyMissile : MonoBehaviour
         }
     }
 
-    /*void checkInterrupt()
-    {
-        if (transform.position < )
-    }
-    */
 
-    /*void contactHit(Vector3 center, float radius)
-    {
-        Collider[] hitColliders = Physics.OverlapSphere(center, radius);
-        int i = 0;
-        while (i < hitColliders.Length)
-        {
-
-            Debug.Log("Hit " + hitColliders[i].gameObject.tag);
-            ++i;
-           // hitColliders[i].SendMessage("methodName"); Calls every moinobehaviour (class) in this object. Probably won't be used. 
-        }
-    }
-
-    */
-
-
-    /*private void OnTriggerEnter2D(Collider2D collision) - This code doesn't work because I can't have rigidbodies
-    {
-        Debug.Log("Hit something");
-        if (collision.tag == "Defenders")
-        {
-            Debug.Log("Enemy Missile hit defender");
-        }
-        else
-        {
-            Debug.Log("Whoops.");
-        }
-    } */
 }

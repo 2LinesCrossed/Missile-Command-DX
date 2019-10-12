@@ -10,33 +10,58 @@ public class CoopScript : MonoBehaviour
     public int enemyCharges = 5;
     GameController controller = null;
     EnemyMissileSpawner missileSpawner = null;
+    GameObject[] defenders;
     private double timer = 0.0f;
-    [SerializeField] private TextMeshProUGUI totalBonusText = null;
-    [SerializeField] private TextMeshProUGUI CountdownText = null;
+    private double playerOneScore = 0.0f;
+    private double playerTwoScore = 0.0f;
+
+    //TEXTGUI
+    [SerializeField] private TextMeshProUGUI winnerTextField = null;
+    [SerializeField] private TextMeshProUGUI enemyChargeText = null;
+    [SerializeField] private TextMeshProUGUI timerText = null;
+    [SerializeField] private TextMeshProUGUI roundCountdown = null;
+    [SerializeField] private TextMeshProUGUI player1scoretext = null;
+    [SerializeField] private TextMeshProUGUI player1finalscoretext = null;
+    [SerializeField] private TextMeshProUGUI player2finalscoretext = null;
     [SerializeField] private GameObject coopStartScreen = null;
     [SerializeField] private GameObject roundOverScreen = null;
+    [SerializeField] private GameObject gameOverScreen = null;
     [SerializeField] private Button closeStartScreen = null;
 
 
+
+    //Bool flags
+    private bool addedEnemy = false;
     private bool addedPlayerMissile = false;
     public bool leftPress = false;
     public bool downPress = false;
     public bool rightPress = false;
+    public bool coopGameOver = false;
+    
+    
     // Start is called before the first frame update
     void Start()
     {
         controller = FindObjectOfType<GameController>();
         missileSpawner = FindObjectOfType<EnemyMissileSpawner>();
+        defenders = GameObject.FindGameObjectsWithTag("Defenders");
     }
 
     // Update is called once per frame
     void Update()
     {
- 
-        StartCoroutine(ReloadMissiles());
-        CountdownText.text = "Survived for: " + timer.ToString("#.##");
-        timer += Time.deltaTime;
-        FireEnemy();
+        if (controller.isRoundOver == false)
+        {
+            StartCoroutine(ReloadMissiles());
+            StartCoroutine(ReloadEnemies());
+            timerText.text = "Survived for: " + timer.ToString("#.##");
+            timer += Time.deltaTime;
+            if (enemyCharges > 0)
+            {
+                FireEnemy();
+                UpdateEnemytext();
+            }
+        }
     }
     public void LoadCoop()
     {
@@ -57,12 +82,54 @@ public class CoopScript : MonoBehaviour
             addedPlayerMissile = true;
             yield return new WaitForSeconds(2.0f);
             controller.playermissilesLeft++;
-            Debug.Log("Added a missile");
+            
             controller.UpdateMissilesLeftText();
             addedPlayerMissile = false;
         }
         
         
+
+    }
+    private IEnumerator ReloadEnemies()
+    {
+
+        while (enemyCharges < 5 && addedEnemy == false && timer < 10)
+        {
+            addedEnemy = true;
+            yield return new WaitForSeconds(1.5f);
+            enemyCharges++;
+
+            UpdateEnemytext();
+            addedEnemy = false;
+        }
+        while (enemyCharges < 8 && addedEnemy == false && (timer > 10 && timer < 30 ))
+        {
+            addedEnemy = true;
+            yield return new WaitForSeconds(1.2f);
+            enemyCharges++;
+            controller.enemymissileSpeed = 3.7f;
+            UpdateEnemytext();
+            addedEnemy = false;
+        }
+        while (enemyCharges < 8 && addedEnemy == false && (timer < 60 && timer > 30))
+        {
+            addedEnemy = true;
+            yield return new WaitForSeconds(0.7f);
+            enemyCharges++;
+            controller.enemymissileSpeed = 5f;
+            UpdateEnemytext();
+            addedEnemy = false;
+        }
+        while (enemyCharges < 10 && addedEnemy == false && timer > 60)
+        {
+            addedEnemy = true;
+            yield return new WaitForSeconds(0.5f);
+            enemyCharges++;
+            controller.enemymissileSpeed = 6f;
+            UpdateEnemytext();
+            addedEnemy = false;
+        }
+
 
     }
     private void InstructionScreen()
@@ -78,7 +145,11 @@ public class CoopScript : MonoBehaviour
         coopStartScreen.SetActive(false);
         controller.gameStart = true;
         timer = 0;
-        CountdownText.gameObject.SetActive(true);
+        timerText.gameObject.SetActive(true);
+    }
+    private void UpdateEnemytext()
+    {
+        enemyChargeText.text = "Enemy Missiles Left: " + enemyCharges;
     }
     private void FireEnemy()
     {
@@ -90,7 +161,7 @@ public class CoopScript : MonoBehaviour
             missileSpawner.missileToSpawn++;
             enemyCharges--;
             missileSpawner.StartRound();
-
+            UpdateEnemytext();
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
@@ -100,7 +171,7 @@ public class CoopScript : MonoBehaviour
             missileSpawner.missileToSpawn++;
             enemyCharges--;
             missileSpawner.StartRound();
-
+            UpdateEnemytext();
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
@@ -110,7 +181,62 @@ public class CoopScript : MonoBehaviour
             missileSpawner.missileToSpawn++;
             enemyCharges--;
             missileSpawner.StartRound();
+            UpdateEnemytext();
+        }
+    }
+    public void RoundOverCoop()
+    {
+        StartCoroutine(RoundOverScreen());
+    }
+    
+    public IEnumerator RoundOverScreen()
+    {
+        yield return new WaitForSeconds(0.5f);
 
+        roundOverScreen.SetActive(true);
+        playerOneScore = timer;
+        player1scoretext.text = "Player one survived for: " + playerOneScore;
+
+        turncount++;
+        timer = 0;
+        timerText.text = "Survived for: " + timer.ToString("#.##");
+        controller.playermissilesLeft = 15;
+        enemyCharges = 5;
+        foreach (GameObject defender in defenders)
+        {
+            Animator reviveanim = defender.GetComponent<Animator>();
+            reviveanim.SetTrigger("ReviveTrigger");
+            reviveanim.ResetTrigger("DeathTrigger");
+
+        }
+
+        roundCountdown.text = "5";
+        yield return new WaitForSeconds(1f);
+        roundCountdown.text = "4";
+        yield return new WaitForSeconds(1f);
+        roundCountdown.text = "3";
+        yield return new WaitForSeconds(1f);
+        roundCountdown.text = "2";
+        yield return new WaitForSeconds(1f);
+        roundCountdown.text = "1";
+        yield return new WaitForSeconds(1f);
+        roundOverScreen.SetActive(false);
+        
+        controller.isRoundOver = false;
+    }
+    public void CoopGameOver()
+    {
+        gameOverScreen.SetActive(true);
+        playerTwoScore = timer;
+        player1finalscoretext.text = "Player One: " + playerOneScore;
+        player2finalscoretext.text = "Player Two: " + playerTwoScore;
+        if (playerOneScore > playerTwoScore)
+        {
+            winnerTextField.text = "The Winner is... Player One!";
+        }
+        else
+        {
+            winnerTextField.text = "The Winner is... Player Two!";
         }
     }
 }
