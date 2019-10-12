@@ -56,6 +56,14 @@ public class CoopScript : MonoBehaviour
             StartCoroutine(ReloadEnemies());
             timerText.text = "Survived for: " + timer.ToString("#.##");
             timer += Time.deltaTime;
+            if (turncount == 0)
+            {
+                playerOneScore = timer;
+            }
+            else
+            {
+                playerTwoScore = timer;
+            }
             if (enemyCharges > 0)
             {
                 FireEnemy();
@@ -194,12 +202,12 @@ public class CoopScript : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         roundOverScreen.SetActive(true);
-        playerOneScore = timer;
-        player1scoretext.text = "Player one survived for: " + playerOneScore;
+        //playerOneScore = timer;
+        player1scoretext.text = "Player one survived for: " + playerOneScore.ToString("#.##");
 
         turncount++;
         timer = 0;
-        timerText.text = "Survived for: " + timer.ToString("#.##");
+        timerText.text = "Survived for: " + timer.ToString("#.##") + "seconds";
         controller.playermissilesLeft = 15;
         enemyCharges = 5;
         foreach (GameObject defender in defenders)
@@ -228,8 +236,8 @@ public class CoopScript : MonoBehaviour
     {
         gameOverScreen.SetActive(true);
         playerTwoScore = timer;
-        player1finalscoretext.text = "Player One: " + playerOneScore;
-        player2finalscoretext.text = "Player Two: " + playerTwoScore;
+        player1finalscoretext.text = "Player One: " + playerOneScore.ToString("#.##") + "seconds";
+        player2finalscoretext.text = "Player Two: " + playerTwoScore.ToString("#.##") + "seconds";
         if (playerOneScore > playerTwoScore)
         {
             winnerTextField.text = "The Winner is... Player One!";

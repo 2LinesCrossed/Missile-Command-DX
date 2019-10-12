@@ -233,13 +233,13 @@ public class GameController : MonoBehaviour
                 citycount = 6;
                 siloDeath = 0;
             }
-            if (coopcontroller.turncount == 1)
+            else 
             {
                 coopcontroller.coopGameOver = true;
                 coopcontroller.CoopGameOver();
                 if (Time.timeScale == 1.0f && isPaused == false)
                 {
-                    soundController.GameOverSFX();
+                    soundController.StartRoundSFX();
                     Time.timeScale = 0.0f;
                     isPaused = true;
                 }
