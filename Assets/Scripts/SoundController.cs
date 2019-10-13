@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
 /// This manages some sound effects, such as low missiles/no missiles, the round over music and the game over music. 
-
+/// Called by the Game Controller to play specific sound effects. 
 /// </summary>
 public class SoundController : MonoBehaviour
 {
@@ -25,7 +25,7 @@ public class SoundController : MonoBehaviour
     {
         
     }
-
+    //Below are the sets of sound effects. Each one when called swaps the active clip of the audio source and plays it.
     public void StartRoundSFX()
     {
         sfx.clip = roundStart;

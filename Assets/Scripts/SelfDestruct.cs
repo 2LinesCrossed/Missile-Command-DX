@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// Simple self-destroy script for explosion objects.
+/// </summary>
 public class SelfDestruct : MonoBehaviour
 {
     [SerializeField] private float destroyTime = 1f;

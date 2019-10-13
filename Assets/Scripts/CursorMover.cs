@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// This script contains the core elements of the cursor movement and targeting, as it also determines which silo is used.
+/// Used to set the cursor, determine how it moves and also what the target for the missiles are. 
+/// </summary>
 public class CursorMover : MonoBehaviour
 {
+    //Serialize Fields set the textures and gameobjects used for calculations. 
     [SerializeField] private Texture2D cursorTexture = null;
     
     [SerializeField] GameObject missilePrefab = null;
@@ -16,6 +20,7 @@ public class CursorMover : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Sets initial values for cursor and game controller. 
         myGameController = GameObject.FindObjectOfType<GameController>();
         cursorHotspot = new Vector2(cursorTexture.height / 2f, cursorTexture.width / 2f);
         Cursor.SetCursor(cursorTexture, cursorHotspot, CursorMode.Auto);
@@ -28,10 +33,10 @@ public class CursorMover : MonoBehaviour
         {
             GameObject bestTarget = GetClosestSilo(missileLauncherPrefabs);
             
-            
+            //Finds the best silo (closest, still alive) and creates missiles from it that fly towards the target. 
             if (bestTarget != null && totalDeath < 3)
             {
-                DeathCounter();
+                DeathCounter(); //Checks to ensure that there is still at least one alive silo. 
                 if (totalDeath < 3)
                 {
                     Object.Instantiate(missilePrefab, bestTarget.transform.position, Quaternion.identity);
@@ -63,7 +68,7 @@ public class CursorMover : MonoBehaviour
        return bestTarget;
     }
     
-    public int DeathCounter()
+    public int DeathCounter() //Value checking for all of the Silos dying, checked separately due to the unique behaviour of silos.
     {
         totalDeath = 0;
         foreach (GameObject missilelauncher in missileLauncherPrefabs)

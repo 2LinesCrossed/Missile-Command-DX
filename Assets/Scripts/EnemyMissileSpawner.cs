@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// Script attached to the object that spawns the missiles. Determines spawn origins.
+/// Utilises camera dimensions for the spawn points. 
+/// </summary>
 public class EnemyMissileSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject enemyPrefab = null;
@@ -31,7 +34,7 @@ public class EnemyMissileSpawner : MonoBehaviour
     }
     public IEnumerator SpawnMissiles()
     {
-        while (missileToSpawn > 0)
+        while (missileToSpawn > 0) //Spawn missiles when there are still missiles to spawn. 
         {
             float randomX = Random.Range(minX, maxX);
             float yValue = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, 0)).y;
@@ -42,6 +45,7 @@ public class EnemyMissileSpawner : MonoBehaviour
         }
     }
     public void StartRound()
+    //Public function to access the coroutine - for some reason, running public coroutines in other scripts doesn't work for me. 
     {
         StartCoroutine(SpawnMissiles());
     }

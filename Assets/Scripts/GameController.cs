@@ -4,8 +4,14 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+/// <summary>
+/// Primary game controller script for the Missile Command game. Probably the most complicated piece of code here. 
+/// Controls multiple values and checks for gamemodes, as well as dozens of SerializeFields determining what
+/// each of the text fields are on the screen for dynamic updating. 
+/// </summary>
 public class GameController : MonoBehaviour
 {
+    //Basic values needed for initialising attributes. 
     public int score = 0;
     public int level = 1;
     public float enemymissileSpeed = 3f;
@@ -54,11 +60,13 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Gets the objects needed for replacing the null variables. 
         enemyMissileSpawner = GameObject.FindObjectOfType<EnemyMissileSpawner>();
         soundController = GameObject.FindObjectOfType<SoundController>();
         sceneloader.GetComponent<Scenetransition>().sceneName = SceneManager.GetActiveScene().name;
 
         gameStart = false;
+        //Checks for which state the game is in. Does different calls depending on whether it's coop or singleplayer. 
         if (sceneloader.GetComponent<Scenetransition>().sceneName == "CoopScene")
         {
             coopCheck = true;
@@ -82,9 +90,10 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(enemyMissilesLeftInRound);
-        if (coopCheck == false) { 
-                if (enemyMissilesLeftInRound <= 0 && isRoundOver == false && gameOverState == false)
+        
+        if (coopCheck == false) //Checks every frame whether the game or round is over if it's in Singleplayer. 
+        { 
+            if (enemyMissilesLeftInRound <= 0 && isRoundOver == false && gameOverState == false)
             {
                 isRoundOver = true;
                 StartCoroutine(EndOfRound());
@@ -95,10 +104,11 @@ public class GameController : MonoBehaviour
         }
         else
         {
+            //Check for VS mode round over. 
             CoopRoundOver();
         }
     }
-    private void MissileCheck()
+    private void MissileCheck() //Warning SFX for the missiles being fired. 
     {
         if (playermissilesLeft == 15 && warned == false)
         {
@@ -115,7 +125,7 @@ public class GameController : MonoBehaviour
         }
     }
     
-    private void InstructionScreen()
+    private void InstructionScreen() //Instruction screen explaining gameplay. 
     {
         Time.timeScale = 0.0f;
         startGamePanel.SetActive(true);
@@ -123,12 +133,13 @@ public class GameController : MonoBehaviour
         
     }
     
-    private void CloseScreen()
+    private void CloseScreen() //Starts the game after the screen is closed. 
     {
         Time.timeScale = 1.0f;
         startGamePanel.SetActive(false);
         gameStart = true;
     }
+    //Updater scripts for the main text UI. 
     public void UpdateMissilesLeftText()
     {
         myMissilesLeftText.text = "Missiles Left: " + playermissilesLeft;
@@ -167,6 +178,7 @@ public class GameController : MonoBehaviour
         enemyMissilesLeftInRound--;
     }
 
+    //Calibrates the enemy missile spawner. 
     private void StartRound()
     {
         enemyMissileSpawner.missileToSpawn = enemyMissilesThisRound;
@@ -175,6 +187,7 @@ public class GameController : MonoBehaviour
     }
     private void CitySearch()
     {
+        //City death counter used for determining game over state. 
         citycount = 6;
         CityController[] cities = GameObject.FindObjectsOfType<CityController>();
         foreach (CityController city in cities)
@@ -188,6 +201,7 @@ public class GameController : MonoBehaviour
 
     private void GameOver()
     {
+        //Primary script for determining game over state, as well as resetting the necessary values. 
         int siloDeath = maincam.GetComponent<CursorMover>().DeathCounter();
         CitySearch();
         if ((citycount == 0 || siloDeath >= 3) )
@@ -197,6 +211,7 @@ public class GameController : MonoBehaviour
             gameOverState = true;
             
             FinalScoreText.text = "Final Score: " + score;
+            //Checks what input to determine what screen to go to next. 
             if (Time.timeScale == 1.0f && isPaused == false)
             {
                 soundController.GameOverSFX();
@@ -222,16 +237,18 @@ public class GameController : MonoBehaviour
     }
     private void CoopRoundOver()
     {
+        //Alternative round/game over script for coop mode. 
         int siloDeath = maincam.GetComponent<CursorMover>().DeathCounter();
         CitySearch();
         if ((citycount == 0 || siloDeath >= 3))
         {
             isRoundOver = true;
-            if (coopcontroller.turncount == 0)
+            if (coopcontroller.turncount == 0) //Checks if only one turn has been taken. 
             {
                 coopcontroller.RoundOverCoop();
                 citycount = 6;
                 siloDeath = 0;
+                soundController.StartRoundSFX();
             }
             else 
             {
@@ -261,25 +278,28 @@ public class GameController : MonoBehaviour
 
         }
     }
-        private void ResetGame()
+    private void ResetGame()
     {
-        
+        //Code to reload the scene. 
         sceneloader.GetComponent<Scenetransition>().sceneName = "MainGame";
         sceneloader.GetComponent<Scenetransition>().SceneReset();
     }
     private void ResetCoop()
     {
-
+        //Code to reload the versus mode scene. 
         sceneloader.GetComponent<Scenetransition>().sceneName = "CoopScene";
         sceneloader.GetComponent<Scenetransition>().SceneReset();
     }
     private void QuitGame()
     {
+        //Code to quit to the main menu. 
         sceneloader.GetComponent<Scenetransition>().sceneName = "Title Screen";
         sceneloader.GetComponent<Scenetransition>().SceneReset();
     }
     public IEnumerator EndOfRound()
     {
+        //Coroutine for determining end of round actions once enemies have been depleted.
+        //Resets values as well as updating the scoreboard.
         yield return new WaitForSeconds(0.5f);
          
         endOfRoundPanel.SetActive(true);
@@ -327,11 +347,13 @@ public class GameController : MonoBehaviour
     }
     public IEnumerator LoadIn()
     {
+        //Coroutine to wait for the load animation to finish playing. 
         yield return new WaitForSeconds(1.5f);
         InstructionScreen();
     }
     public IEnumerator MissileWaiter()
     {
+        //Simple coroutine to wait before starting the round to avoid premature firing.
         yield return new WaitForSeconds(1.5f);
         StartRound();
     }

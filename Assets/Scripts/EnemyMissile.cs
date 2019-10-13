@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// Enemy missile behaviour controller. This takes effect when the missiles are spawned by EnemyMissileSpawner.
+/// Contains speed values as well as determining which defenders they are targeting. 
+/// </summary>
 public class EnemyMissile : MonoBehaviour
 {
     //Serialize field values are present for easy adjustment in the inspector.
     [SerializeField] private float speed = 5f;
     [SerializeField] private float radius = 0.2f;
     [SerializeField] private GameObject explosionPrefab = null;
-    //[SerializeField] private GameObject collisionSplosion = null;
+    
     GameObject[] defenders; 
     Transform target = null;
     Animator death = null;
@@ -16,6 +19,8 @@ public class EnemyMissile : MonoBehaviour
     private AudioSource deathsound = null;
     int ran = 0;
     CoopScript coop = null;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,7 +42,7 @@ public class EnemyMissile : MonoBehaviour
                 ran = Random.Range(3, 6);
                 
 
-                target = defenders[ran].transform; //This gets all of the defenders, setting them as potential attackable objects
+                target = defenders[ran].transform; //This gets the specified range of defenders to set them as attackable objects. 
                 death = defenders[ran].GetComponent<Animator>(); //This gets the animator of the chosen defender, making it so they change state when they're hit
 
             }
@@ -46,7 +51,7 @@ public class EnemyMissile : MonoBehaviour
                 ran = Random.Range(0, 3);
                 
 
-                target = defenders[ran].transform; //This gets all of the defenders, setting them as potential attackable objects
+                target = defenders[ran].transform; //This gets the specified range of defenders to set them as attackable objects. 
                 death = defenders[ran].GetComponent<Animator>(); //This gets the animator of the chosen defender, making it so they change state when they're hit
 
             }
@@ -55,7 +60,7 @@ public class EnemyMissile : MonoBehaviour
                 ran = Random.Range(6, 9);
                 
 
-                target = defenders[ran].transform; //This gets all of the defenders, setting them as potential attackable objects
+                target = defenders[ran].transform;//This gets the specified range of defenders to set them as attackable objects. 
                 death = defenders[ran].GetComponent<Animator>(); //This gets the animator of the chosen defender, making it so they change state when they're hit
 
             }
@@ -88,16 +93,18 @@ public class EnemyMissile : MonoBehaviour
 
 
     
-    void checkDistance()
+    void checkDistance() //Checks distance between the missiles and defenders for manual detonation, a workaround for the lack of a rigidbody.
     {
         float distance = Vector3.Distance(gameObject.transform.position, target.transform.position);
         //Debug.Log(distance);
         if (distance < radius) //Note: the cities only get up to a distance of 0.6 for some reason, so the radius has to be more than that.
         {
             
-            //Debug.Log("Hit " + target.gameObject.name);
+            //Creates explosions on point of contact. 
             Object.Instantiate(explosionPrefab, new Vector3( transform.position.x, transform.position.y, -2), Quaternion.identity);
             Destroy(gameObject);
+            //Checks what object type it's hitting to activate their specific code snippets in the game controller. 
+            //Another workaround for the lack of rigidbodies. Pretty clever if I do say so myself!
             if ((target.name == "MidSilo" || target.name == "LeftSilo" || target.name == "RightSilo") && death.GetCurrentAnimatorStateInfo(0).IsName("siloalive") )
             {
                 controller.MissileDestroyedSilo();
@@ -114,6 +121,7 @@ public class EnemyMissile : MonoBehaviour
             }
             else
             {
+                //Dud hit on an already dead object. 
                 controller.MissileHitDead();
             }
             

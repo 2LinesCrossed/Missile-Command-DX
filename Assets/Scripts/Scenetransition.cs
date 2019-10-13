@@ -30,6 +30,7 @@ public class Scenetransition : MonoBehaviour
     }
     public void SceneSwap()
     {
+        //Code snippet that determines what scene to load, but also prevents loading the same scene while you're still in it.
         if (Input.GetKeyDown(KeyCode.S) && sceneIndex != 1)
         {
             sceneName = "MainGame";
@@ -45,7 +46,10 @@ public class Scenetransition : MonoBehaviour
             sceneName = "CoopScene";
             StartCoroutine(LoadScene());
         }
-         
+        if (Input.GetKeyDown(KeyCode.Escape)) //Quit function. Doesn't work while in Unity Editor.
+        {
+            Application.Quit();
+        }
     }
     public void SceneReset()
     {
